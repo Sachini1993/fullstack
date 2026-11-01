@@ -1,0 +1,65 @@
+### GET /movies
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+[{"id":1,"title":"Inception","director":"Christopher Nolan","year":2010},{"id":2,"title":"The Matrix","director":"The Wachowskis","year":1999},{"id":3,"title":"Parasite","director":"Bong Joon-ho","year":2019}]
+
+
+### GET /movies/1
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+{"id":1,"title":"Inception","director":"Christopher Nolan","year":2010}
+
+
+### GET /movies/999
+HTTP/1.1 404 Not Found
+Content-Type: application/json; charset=utf-8
+
+{"error":"Movie not found"}
+
+
+### POST /movies (valid)
+HTTP/1.1 201 Created
+Content-Type: application/json; charset=utf-8
+
+{"id":4,"title":"Blade Runner","director":"Ridley Scott","year":1982}
+
+
+### GET /movies after POST
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+[{"id":1,"title":"Inception","director":"Christopher Nolan","year":2010},{"id":2,"title":"The Matrix","director":"The Wachowskis","year":1999},{"id":3,"title":"Parasite","director":"Bong Joon-ho","year":2019},{"id":4,"title":"Blade Runner","director":"Ridley Scott","year":1982}]
+
+
+### POST /movies (invalid)
+HTTP/1.1 400 Bad Request
+Content-Type: application/json; charset=utf-8
+
+{"error":"title, director and year are required"}
+
+
+### PATCH /movies/1
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+{"id":1,"title":"Inception","director":"Christopher Nolan","year":2011}
+
+
+### DELETE /movies/1
+HTTP/1.1 204 No Content
+
+
+
+### GET /movies/1 after DELETE
+HTTP/1.1 404 Not Found
+Content-Type: application/json; charset=utf-8
+
+{"error":"Movie not found"}
+
+
+### Restart test
+POST /movies -> 201 (Blade Runner added, 4 movies)
+[server stopped and started again]
+GET /movies -> only the original 3 movies; Blade Runner is gone.

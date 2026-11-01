@@ -1,0 +1,48 @@
+@baseUrl = http://localhost:3000
+
+### Get all movies (expect 200 OK)
+GET {{baseUrl}}/movies
+
+### Get movie by ID (expect 200 OK)
+GET {{baseUrl}}/movies/1
+
+### Movie that does not exist (expect 404 Not Found)
+GET {{baseUrl}}/movies/999
+
+### Create a new movie (expect 201 Created)
+POST {{baseUrl}}/movies
+Content-Type: application/json
+
+{
+  "title": "Blade Runner",
+  "director": "Ridley Scott",
+  "year": 1982
+}
+
+### Verify the new movie appears (expect 200 OK, 4 movies)
+GET {{baseUrl}}/movies
+
+### Invalid movie - missing title and year (expect 400 Bad Request)
+POST {{baseUrl}}/movies
+Content-Type: application/json
+
+{
+  "director": "Nobody"
+}
+
+### BONUS: Update a movie (expect 200 OK)
+PATCH {{baseUrl}}/movies/1
+Content-Type: application/json
+
+{
+  "year": 2011
+}
+
+### Verify the update (expect year 2011)
+GET {{baseUrl}}/movies/1
+
+### BONUS: Delete a movie (expect 204 No Content)
+DELETE {{baseUrl}}/movies/1
+
+### Verify the delete (expect 404 Not Found)
+GET {{baseUrl}}/movies/1
