@@ -1,36 +1,62 @@
 @baseUrl = http://localhost:3000
 
-### Get all movies (expect 200 OK)
+### 1. Get all movies (200, array)
 GET {{baseUrl}}/movies
 
-### Get movie by ID (expect 200 OK)
+### 2. Get one existing movie (200)
 GET {{baseUrl}}/movies/1
 
-### Movie that does not exist (expect 404 Not Found)
+### 3. Get a missing movie (404 MOVIE_NOT_FOUND)
 GET {{baseUrl}}/movies/999
 
-### Create a new movie (expect 201 Created)
+### 4. Create a valid movie (201, server creates id)
 POST {{baseUrl}}/movies
 Content-Type: application/json
 
 {
-  "title": "Blade Runner",
-  "director": "Ridley Scott",
-  "year": 1982
+  "title": "Arrival",
+  "year": 2016,
+  "genre": "Sci-Fi"
 }
 
-### Verify the new movie appears (expect 200 OK, 4 movies)
-GET {{baseUrl}}/movies
-
-### Invalid movie - missing title and year (expect 400 Bad Request)
+### 5. Create an invalid movie (400 VALIDATION_ERROR)
 POST {{baseUrl}}/movies
 Content-Type: application/json
 
 {
-  "director": "Nobody"
+  "title": "",
+  "year": "not a number"
 }
 
-### BONUS: Update a movie (expect 200 OK)
+### 6. Replace a movie with PUT (200)
+PUT {{baseUrl}}/movies/1
+Content-Type: application/json
+
+{
+  "title": "Inception: Updated Edition",
+  "year": 2010,
+  "genre": "Sci-Fi"
+}
+
+### 7. PUT with a missing property (400)
+PUT {{baseUrl}}/movies/1
+Content-Type: application/json
+
+{
+  "title": "Inception: Updated Edition"
+}
+
+### 8. PUT a missing movie (404)
+PUT {{baseUrl}}/movies/999
+Content-Type: application/json
+
+{
+  "title": "Ghost",
+  "year": 1990,
+  "genre": "Drama"
+}
+
+### 9. Partially update a movie with PATCH (200, only year changes)
 PATCH {{baseUrl}}/movies/1
 Content-Type: application/json
 
@@ -38,11 +64,42 @@ Content-Type: application/json
   "year": 2011
 }
 
-### Verify the update (expect year 2011)
-GET {{baseUrl}}/movies/1
+### 10. PATCH with an invalid value (400)
+PATCH {{baseUrl}}/movies/1
+Content-Type: application/json
 
-### BONUS: Delete a movie (expect 204 No Content)
+{
+  "year": 1500
+}
+
+### 11. PATCH a missing movie (404)
+PATCH {{baseUrl}}/movies/999
+Content-Type: application/json
+
+{
+  "year": 2000
+}
+
+### 12. Filter by genre (case-insensitive) and year, sorted by year (200)
+GET {{baseUrl}}/movies?genre=sci-fi&minYear=2000&sort=year
+
+### 13. Sort by title (200)
+GET {{baseUrl}}/movies?sort=title
+
+### 14. Filter with no matches (200, empty array)
+GET {{baseUrl}}/movies?genre=Horror
+
+### 15. Invalid minYear (400)
+GET {{baseUrl}}/movies?minYear=invalid
+
+### 16. Unsupported sort value (400)
+GET {{baseUrl}}/movies?sort=rating
+
+### 17. Delete an existing movie (204, empty body)
 DELETE {{baseUrl}}/movies/1
 
-### Verify the delete (expect 404 Not Found)
-GET {{baseUrl}}/movies/1
+### 18. Delete the same movie again (404)
+DELETE {{baseUrl}}/movies/1
+
+### 19. Unknown route (404 ROUTE_NOT_FOUND)
+GET {{baseUrl}}/does-not-exist
