@@ -1,0 +1,17 @@
+{
+  "name": "movies-api-week4",
+  "version": "1.0.0",
+  "description": "Backend Development Week 4 - Express movie API backed by PostgreSQL",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^18.0.10",
+    "express": "^5.3.0",
+    "morgan": "^1.12.1",
+    "pg": "^8.23.1"
+  }
+}
